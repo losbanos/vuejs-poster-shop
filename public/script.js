@@ -4,11 +4,7 @@ new Vue({
     data() {
         return {
             total: 0,
-            items: [
-                {title: 'abc', id: 1},
-                {title: 'ABC', id: 2},
-                {title: 'Title Item', id: 3}
-            ],
+            items: [],
             cart: [],
             search: ''
         }
@@ -54,7 +50,7 @@ new Vue({
         onSubmit() {
             this.$http.get('/search/'.concat('90s'))
                 .then(function (res) {
-                    console.log(res);
+                    this.items = res.data;
                 })
             ;
         }
