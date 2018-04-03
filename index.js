@@ -5,6 +5,8 @@ var server = require('http').createServer(app);
 var axios = require('axios');
 var querystring = require('querystring');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 require('dotenv').config();
 
 var bodyParser = require('body-parser');
@@ -15,22 +17,32 @@ app.get('/', function(req, res) {
 });
 
 var instance = axios.create({
-  baseURL: 'https://api.imgur.com/3/',
-  headers: { 'Authorization': 'Client-ID ' + process.env.IMGUR_CLIENT_ID }
+  // baseURL: 'https://api.imgur.com/3/',
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  // headers: { 'Authorization': 'Client-ID ' + process.env.IMGUR_CLIENT_ID }
 });
 
-app.get('/search/:query', function(req, res) {
-  const url = 'gallery/search/top/0/?' + querystring.stringify({ q: req.params.query });
-  instance.get(url)
-    .then(function (result) {
-      res.send(result.data.data.filter(item => !item.is_album && !item.nsfw && !item.animated));
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
-  ;
+// app.get('/search/:query', function(req, res) {
+//   const url = 'gallery/search/top/0/?' + querystring.stringify({ q: req.params.query });
+//   instance.get(url)
+//     .then(function (result) {
+//       res.send(result.data.data.filter(item => !item.is_album && !item.nsfw && !item.animated));
+//     })
+//     .catch(function (error) {
+//       console.log(error);
+//     })
+//   ;
+// });
+app.get('/photos/:albumId/', function(req, res) {
+   const url = '/photos?'+querystring.stringify({albumId:req.params.albumId});
+   instance.get(url)
+       .then(function(result) {
+           res.send(result.data);
+       })
+       .catch(function(error) {
+           console.log(error);
+       })
 });
-
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 

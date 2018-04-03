@@ -1,4 +1,5 @@
 const PRICE = 9.99;
+
 new Vue({
     el: '#app',
     data() {
@@ -6,7 +7,8 @@ new Vue({
             total: 0,
             items: [],
             cart: [],
-            search: ''
+            search: '',
+            pageCnt: 0
         }
     },
     methods: {
@@ -48,9 +50,12 @@ new Vue({
             }
         },
         onSubmit() {
-            this.$http.get('/search/'.concat('90s'))
+            this.$http.get('/photos/'.concat(this.search))
                 .then(function (res) {
                     this.items = res.data;
+                    this.total = this.items.length;
+                }, function(e) {
+                    console.log(e);
                 })
             ;
         }
